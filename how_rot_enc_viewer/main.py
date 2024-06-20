@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
 import numpy as np
 import pyqtgraph as pg
 

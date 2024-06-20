@@ -1,3 +1,24 @@
+[tool.poetry]
+name = "how_rot_enc_viewer"
+version = "0.1.0"
+description = ""
+authors = ["Sam Tygier <sam.tygier@stfc.ac.uk>"]
+license = "GPL-3.0-or-later"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+PyQt6 = "^6.7.0"
+numpy = "^2.0.0"
+pyqtgraph = "^0.13.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pre-commit = "^3.7.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.ruff]
 line-length = 120
 target-version = "py310"
