@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 import sys
+from typing import Any
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
 import numpy as np
 import pyqtgraph as pg
 
+import config
+import data
+
 
 class MainWindow(QMainWindow):
+    datasets: list[dict[str, Any]]
+    projections_data: np.ndarray
 
     def __init__(self) -> None:
         super().__init__()
@@ -35,10 +41,26 @@ class MainWindow(QMainWindow):
         widget.addItem(view)
         return widget, img_item
 
+    def select_dataset(self, index: int):
+        projections_dataset = self.datasets[index]['projections']
+        self.projections_data = data.load_stack(**projections_dataset)
 
-app = QApplication(sys.argv)
+        self.projections_img.setImage(self.projections_data[0])
 
-window = MainWindow()
-window.show()
 
-app.exec()
+class HOWViewer:
+
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.window = MainWindow()
+        self.window.datasets = config.datasets
+        self.window.select_dataset(0)
+
+    def start(self):
+        self.window.show()
+        self.app.exec()
+
+
+if __name__ == '__main__':
+    app = HOWViewer()
+    app.start()

@@ -1,5 +1,4 @@
 from pathlib import Path
-from collections.abc import Sequence
 
 import numpy as np
 from tifffile import tifffile
@@ -12,8 +11,9 @@ def imread(filename: Path) -> np.ndarray:
         raise RuntimeError(f"TiffFileError {e.args[0]}: {filename}") from e
 
 
-def load_stack(directory: Path, name_pattern: str,
-               indexes: Sequence[int]) -> np.ndarray:
+def load_stack(directory: Path, name_pattern: str, start: int,
+               stop: int) -> np.ndarray:
+    indexes = range(start, stop)
     image_0 = imread(directory / name_pattern.format(indexes[0]))
 
     count = len(indexes)
