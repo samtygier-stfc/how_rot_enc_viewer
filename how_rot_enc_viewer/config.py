@@ -9,6 +9,12 @@ datasets.append({
         'name_pattern': 'Pikachu_Trabs_idx_{:04d}.tiff',
         'start': 0,
         'stop': 101,
+    },
+    'reconstruction': {
+        'directory': BASE_PATH / 'Pikachu/Recon/Reduced/Angled',
+        'name_pattern': 'Pikachu_Angled_Recon_idx_{:04d}.tiff',
+        'start': 0,
+        'stop': 100,
     }
 })
 datasets.append({
@@ -17,6 +23,12 @@ datasets.append({
         'name_pattern': 'Char_Trabs_idx_{:04d}.tiff',
         'start': 0,
         'stop': 98,
+    },
+    'reconstruction': {
+        'directory': BASE_PATH / 'Char/Recon/Reduced/Not_Angled',
+        'name_pattern': 'Char_Recon_idx_{:04d}.tiff',
+        'start': 0,
+        'stop': 100,
     }
 })
 datasets.append({
@@ -25,5 +37,11 @@ datasets.append({
         'name_pattern': 'Horsea_Trabs_idx_{:04d}.tiff',
         'start': 0,
         'stop': 98,
+    },
+    'reconstruction': {
+        'directory': BASE_PATH / 'Horsea/Recon/Reduced/Angled',
+        'name_pattern': 'Horsea_Angled_Recon_idx_{:04d}.tiff',
+        'start': 0,
+        'stop': 100,
     }
 })

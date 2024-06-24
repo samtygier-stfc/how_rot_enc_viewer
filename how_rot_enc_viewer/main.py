@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def _make_view() -> tuple[pg.GraphicsLayoutWidget, pg.ImageItem]:
-        data = np.random.default_rng().random((200, 200))
+        data = np.zeros((200, 200))
         widget = pg.GraphicsLayoutWidget()
         view = pg.ViewBox()
         img_item = pg.ImageItem(data)
@@ -45,6 +45,10 @@ class MainWindow(QMainWindow):
     def select_dataset(self, index: int) -> None:
         projections_dataset = self.datasets[index]['projections']
         self.projections_data = data.load_stack(**projections_dataset)
+
+        reconstruction_dataset = self.datasets[index]['reconstruction']
+        self.reconstruction_data = data.load_stack(**reconstruction_dataset)
+
         self.sinogram = np.zeros(
             (self.projections_data.shape[1], self.projections_data.shape[0]))
         self.angles_done = np.zeros((self.projections_data.shape[0]),
@@ -61,6 +65,12 @@ class MainWindow(QMainWindow):
                                                              1000]
         self.sinogram_img.setImage(self.sinogram)
         self.angles_done[self.angle] = True
+
+        if np.all(self.angles_done):
+            self.show_reconstruction()
+
+    def show_reconstruction(self) -> None:
+        self.reconstruction_img.setImage(self.reconstruction_data[50])
 
     def keyPressEvent(self, e: QEvent) -> None:
         if e.modifiers() & Qt.KeyboardModifier.ControlModifier:
