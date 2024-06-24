@@ -2,7 +2,7 @@
 import sys
 from typing import Any
 
-from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtCore import Qt, QEvent, QTimer
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
 import numpy as np
 import pyqtgraph as pg
@@ -32,6 +32,10 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.sinogram_view)
         self.layout.addWidget(self.reconstruction_view)
 
+        self.recon_animate_timer = QTimer(self)
+        self.recon_animate_timer.setInterval(100)
+        self.recon_animate_timer.timeout.connect(self.recon_animate)
+
     @staticmethod
     def _make_view() -> tuple[pg.GraphicsLayoutWidget, pg.ImageItem]:
         data = np.zeros((200, 200))
@@ -43,11 +47,14 @@ class MainWindow(QMainWindow):
         return widget, img_item
 
     def select_dataset(self, index: int) -> None:
+        self.recon_animate_timer.stop()
         projections_dataset = self.datasets[index]['projections']
         self.projections_data = data.load_stack(**projections_dataset)
 
         reconstruction_dataset = self.datasets[index]['reconstruction']
         self.reconstruction_data = data.load_stack(**reconstruction_dataset)
+        self.recon_slice = 0
+        self.max_recon_slice = self.reconstruction_data.shape[0]
 
         self.sinogram = np.zeros(
             (self.projections_data.shape[1], self.projections_data.shape[0]))
@@ -67,10 +74,17 @@ class MainWindow(QMainWindow):
         self.angles_done[self.angle] = True
 
         if np.all(self.angles_done):
-            self.show_reconstruction()
+            if not self.recon_animate_timer.isActive():
+                self.recon_animate_timer.start()
 
     def show_reconstruction(self) -> None:
-        self.reconstruction_img.setImage(self.reconstruction_data[50])
+        self.reconstruction_img.setImage(
+            self.reconstruction_data[self.recon_slice])
+
+    def recon_animate(self) -> None:
+        self.recon_slice += 1
+        self.recon_slice = self.recon_slice % self.max_recon_slice
+        self.show_reconstruction()
 
     def keyPressEvent(self, e: QEvent) -> None:
         if e.modifiers() & Qt.KeyboardModifier.ControlModifier:
