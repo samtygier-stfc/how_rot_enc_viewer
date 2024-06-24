@@ -12,7 +12,7 @@ repos:
     rev: 'v1.8.0'
     hooks:
     -   id: mypy
-        files: ^mantidimaging/
+        files: ^how_rot_enc_viewer/
         args: [--ignore-missing-imports]
         additional_dependencies: [types-docutils, types-PyYAML, types-requests]
 -   repo: https://github.com/astral-sh/ruff-pre-commit
