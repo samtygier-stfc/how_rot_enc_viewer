@@ -2,6 +2,7 @@
 import sys
 from typing import Any
 
+from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
 import numpy as np
 import pyqtgraph as pg
@@ -41,11 +42,31 @@ class MainWindow(QMainWindow):
         widget.addItem(view)
         return widget, img_item
 
-    def select_dataset(self, index: int):
+    def select_dataset(self, index: int) -> None:
         projections_dataset = self.datasets[index]['projections']
         self.projections_data = data.load_stack(**projections_dataset)
+        self.angle = 0
+        self.max_angle = self.datasets[index]['projections']['stop']
+        self.rotate(0)
 
-        self.projections_img.setImage(self.projections_data[0])
+    def rotate(self, step: int) -> None:
+        self.angle += step
+        self.angle = self.angle % self.max_angle
+        self.projections_img.setImage(self.projections_data[self.angle])
+
+    def keyPressEvent(self, e: QEvent) -> None:
+        if e.modifiers() & Qt.KeyboardModifier.ControlModifier:
+            if e.key() == Qt.Key.Key_1:
+                self.select_dataset(0)
+            if e.key() == Qt.Key.Key_2:
+                self.select_dataset(1)
+            if e.key() == Qt.Key.Key_3:
+                self.select_dataset(2)
+
+            if e.key() == Qt.Key.Key_4:
+                self.rotate(1)
+            if e.key() == Qt.Key.Key_5:
+                self.rotate(-1)
 
 
 class HOWViewer:
