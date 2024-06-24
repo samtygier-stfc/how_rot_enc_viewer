@@ -45,6 +45,10 @@ class MainWindow(QMainWindow):
     def select_dataset(self, index: int) -> None:
         projections_dataset = self.datasets[index]['projections']
         self.projections_data = data.load_stack(**projections_dataset)
+        self.sinogram = np.zeros(
+            (self.projections_data.shape[1], self.projections_data.shape[0]))
+        self.angles_done = np.zeros((self.projections_data.shape[0]),
+                                    dtype=bool)
         self.angle = 0
         self.max_angle = self.datasets[index]['projections']['stop']
         self.rotate(0)
@@ -53,6 +57,10 @@ class MainWindow(QMainWindow):
         self.angle += step
         self.angle = self.angle % self.max_angle
         self.projections_img.setImage(self.projections_data[self.angle])
+        self.sinogram[:, self.angle] = self.projections_data[self.angle, :,
+                                                             1000]
+        self.sinogram_img.setImage(self.sinogram)
+        self.angles_done[self.angle] = True
 
     def keyPressEvent(self, e: QEvent) -> None:
         if e.modifiers() & Qt.KeyboardModifier.ControlModifier:
