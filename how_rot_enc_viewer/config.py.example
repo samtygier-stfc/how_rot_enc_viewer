@@ -1,6 +1,7 @@
 from pathlib import Path
 
 BASE_PATH = Path('/data/imaging/harwell_open_week/')
+CACHED_DIR = Path('/var/tmp/tomo_file_cache')
 
 datasets = []
 datasets.append({

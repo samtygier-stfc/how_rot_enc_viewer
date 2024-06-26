@@ -3,7 +3,8 @@ from pathlib import Path
 import numpy as np
 from tifffile import tifffile
 
-CACHED_DIR = Path('/var/tmp/tomo_file_cache')
+from config import CACHED_DIR
+
 if not CACHED_DIR.exists():
     CACHED_DIR.mkdir()
 
