@@ -28,6 +28,9 @@ class MainWindow(QMainWindow):
         self.sinogram_view, self.sinogram_img = self._make_view()
         self.reconstruction_view, self.reconstruction_img = self._make_view()
 
+        self.projections_img.getViewBox().setAspectLocked(True)
+        self.reconstruction_img.getViewBox().setAspectLocked(True)
+
         self.layout.addWidget(self.projections_view)
         self.layout.addWidget(self.sinogram_view)
         self.layout.addWidget(self.reconstruction_view)
@@ -41,7 +44,7 @@ class MainWindow(QMainWindow):
         data = np.zeros((200, 200))
         widget = pg.GraphicsLayoutWidget()
         view = pg.ViewBox()
-        img_item = pg.ImageItem(data)
+        img_item = pg.ImageItem(data, autolevel=False)
         view.addItem(img_item)
         widget.addItem(view)
         return widget, img_item
@@ -50,19 +53,30 @@ class MainWindow(QMainWindow):
         self.recon_animate_timer.stop()
         projections_dataset = self.datasets[index]['projections']
         self.projections_data = data.load_stack(**projections_dataset)
+        self.level_min_max = self.projections_data.min(
+        ), self.projections_data.max()
 
         reconstruction_dataset = self.datasets[index]['reconstruction']
         self.reconstruction_data = data.load_stack(**reconstruction_dataset)
         self.recon_slice = 0
         self.max_recon_slice = self.reconstruction_data.shape[0]
+        self.level_min_max_recon = self.reconstruction_data.min(
+        ), self.reconstruction_data.max()
 
-        self.sinogram = np.zeros(
-            (self.projections_data.shape[1], self.projections_data.shape[0]))
+        self.sinogram = np.full(
+            (self.projections_data.shape[1], self.projections_data.shape[0]),
+            self.level_min_max[0])
         self.angles_done = np.zeros((self.projections_data.shape[0]),
                                     dtype=bool)
         self.angle = 0
         self.max_angle = self.datasets[index]['projections']['stop']
         self.rotate(0)
+
+        self.projections_img.setLevels(self.level_min_max)
+        self.sinogram_img.setLevels(self.level_min_max)
+        self.reconstruction_img.setLevels(self.level_min_max_recon)
+        self.reconstruction_img.setImage(np.full((1, 1),
+                                                 self.level_min_max[0]))
 
     def rotate(self, step: int) -> None:
         self.angle += step
