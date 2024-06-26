@@ -40,7 +40,7 @@ def load_stack_c(directory: Path, name_pattern: str, start: int,
         np.save(cache_file, data)
         print(f"Wrote {cache_file}")
     else:
-        data = np.load(cache_file)
+        data = np.load(cache_file, mmap_mode='r')
         print(f"Read {cache_file}")
     return data
 
