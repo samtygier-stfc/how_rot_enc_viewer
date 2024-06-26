@@ -49,12 +49,12 @@ class MainWindow(QMainWindow):
     def select_dataset(self, index: int) -> None:
         self.recon_animate_timer.stop()
         projections_dataset = self.datasets[index]['projections']
-        self.projections_data = data.load_stack(**projections_dataset)
+        self.projections_data = data.load_stack_c(**projections_dataset)
         self.level_min_max = self.projections_data.min(
         ), self.projections_data.max()
 
         reconstruction_dataset = self.datasets[index]['reconstruction']
-        self.reconstruction_data = data.load_stack(**reconstruction_dataset)
+        self.reconstruction_data = data.load_stack_c(**reconstruction_dataset)
         self.recon_slice = 0
         self.max_recon_slice = self.reconstruction_data.shape[0]
         self.level_min_max_recon = self.reconstruction_data.min(
