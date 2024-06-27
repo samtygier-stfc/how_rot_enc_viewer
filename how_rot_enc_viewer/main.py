@@ -13,7 +13,7 @@ class HOWViewer:
         self.app = QApplication(sys.argv)
         self.window = MainWindow()
         self.window.datasets = config.datasets
-        self.window.select_dataset(0)
+        self.window.start()
 
     def start(self):
         self.window.show()

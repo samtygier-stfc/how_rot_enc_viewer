@@ -3,7 +3,7 @@ from typing import Any
 import numpy as np
 import pyqtgraph as pg
 from PyQt6.QtCore import QTimer, QEvent, Qt
-from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QLabel, QApplication
 
 import data
 
@@ -37,6 +37,14 @@ class MainWindow(QMainWindow):
         self.recon_animate_timer.setInterval(100)
         self.recon_animate_timer.timeout.connect(self.recon_animate)
 
+        self.message_box = QLabel("Starting")
+        self.layout.addWidget(self.message_box)
+
+        self.start_timer = QTimer(self)
+
+    def start(self):
+        self.start_timer.singleShot(100, self.do_loads)
+
     @staticmethod
     def _make_view() -> tuple[pg.GraphicsLayoutWidget, pg.ImageItem]:
         data = np.zeros((200, 200))
@@ -46,6 +54,13 @@ class MainWindow(QMainWindow):
         view.addItem(img_item)
         widget.addItem(view)
         return widget, img_item
+
+    def do_loads(self) -> None:
+        for i in [0, 1, 2, 0]:
+            self.message_box.setText(f"Loading {i}")
+            QApplication.processEvents()
+            self.select_dataset(i)
+        self.message_box.hide()
 
     def select_dataset(self, index: int) -> None:
         self.recon_animate_timer.stop()
