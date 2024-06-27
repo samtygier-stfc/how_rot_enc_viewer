@@ -10,6 +10,7 @@ python = "^3.10"
 PyQt6 = "^6.7.0"
 numpy = "^2.0.0"
 pyqtgraph = "^0.13.7"
+scikit-image = "^0.24.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
