@@ -13,11 +13,15 @@ if not CACHED_DIR.exists():
 def imread(filename: Path) -> np.ndarray:
     if filename.suffix == '.tiff':
         try:
-            return tifffile.imread(filename)
+            data = tifffile.imread(filename)
         except tifffile.TiffFileError as e:
             raise RuntimeError(f"TiffFileError {e.args[0]}: {filename}") from e
     elif filename.suffix == '.png':
-        return skimage.io.imread(filename, as_gray=True)
+        data = skimage.io.imread(filename, as_gray=True)
+
+    if data.dtype == np.float32:
+        data = data.astype(np.float16)
+    return data
 
 
 def load_stack(directory: Path, name_pattern: str, start: int,
