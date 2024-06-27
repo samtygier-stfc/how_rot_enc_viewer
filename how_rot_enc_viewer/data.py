@@ -29,8 +29,8 @@ def load_stack(directory: Path, name_pattern: str, start: int,
     width, height = image_0.shape
     image_stack = np.zeros((count, height, width), dtype=image_0.dtype)
 
-    for i in indexes:
-        image_stack[i] = imread(directory / name_pattern.format(i)).T[:, ::-1]
+    for n, i in enumerate(indexes):
+        image_stack[n] = imread(directory / name_pattern.format(i)).T[:, ::-1]
 
     return image_stack
 
