@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QLabel, QApplicat
 
 import data
 
+INACTIVE_TIMEOUT = 120 * 1000
+
 
 class MainWindow(QMainWindow):
     datasets: list[dict[str, Any]]
@@ -41,6 +43,11 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.message_box)
 
         self.start_timer = QTimer(self)
+
+        self.inactive_timer = QTimer(self)
+        self.inactive_timer.setSingleShot(True)
+        self.inactive_timer.start(INACTIVE_TIMEOUT)
+        self.inactive_timer.timeout.connect(self.handle_inactive)
 
     def start(self):
         self.start_timer.singleShot(100, self.do_loads)
@@ -126,3 +133,15 @@ class MainWindow(QMainWindow):
                 self.rotate(1)
             if e.key() == Qt.Key.Key_5:
                 self.rotate(-1)
+
+        self.inactive_timer.start(INACTIVE_TIMEOUT)
+
+    def handle_inactive(self) -> None:
+        self.recon_animate_timer.stop()
+        blank = np.zeros((
+            1,
+            1,
+        ))
+        self.projections_img.setImage(blank)
+        self.sinogram_img.setImage(blank)
+        self.reconstruction_img.setImage(blank)
