@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Tomography")
+        self.showFullScreen()
         self.central = QWidget()
         self.layout = QHBoxLayout()
         self.central.setLayout(self.layout)
