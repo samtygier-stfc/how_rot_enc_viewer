@@ -41,7 +41,8 @@ def load_stack(directory: Path, name_pattern: str, start: int,
 
 def load_stack_c(directory: Path, name_pattern: str, start: int,
                  stop: int) -> np.ndarray:
-    cache_file = CACHED_DIR / (name_pattern.format(0) + ".npy")
+    cache_file = CACHED_DIR / (directory.name + '_' + name_pattern.format(0) +
+                               ".npy")
     if not cache_file.exists():
         data = load_stack(directory, name_pattern, start, stop)
         #data = data.astype(np.float16)
