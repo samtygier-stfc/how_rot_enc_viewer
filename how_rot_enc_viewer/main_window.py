@@ -35,6 +35,10 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.sinogram_view)
         self.layout.addWidget(self.reconstruction_view)
 
+        cm = pg.colormap.getFromMatplotlib("binary")
+        self.projections_img.setColorMap(cm)
+        self.sinogram_img.setColorMap(cm)
+
         self.recon_animate_timer = QTimer(self)
         self.recon_animate_timer.setInterval(100)
         self.recon_animate_timer.timeout.connect(self.recon_animate)
@@ -57,6 +61,7 @@ class MainWindow(QMainWindow):
         data = np.zeros((200, 200))
         widget = pg.GraphicsLayoutWidget()
         view = pg.ViewBox()
+        view.setBackgroundColor((255, 255, 255))
         img_item = pg.ImageItem(data, autolevel=False)
         view.addItem(img_item)
         widget.addItem(view)
@@ -95,8 +100,7 @@ class MainWindow(QMainWindow):
         self.projections_img.setLevels(self.level_min_max)
         self.sinogram_img.setLevels(self.level_min_max)
         self.reconstruction_img.setLevels(self.level_min_max_recon)
-        self.reconstruction_img.setImage(np.full((1, 1),
-                                                 self.level_min_max[0]))
+        self.reconstruction_img.setImage(np.full((1, 1), 255))
 
     def rotate(self, step: int) -> None:
         self.angle += step
