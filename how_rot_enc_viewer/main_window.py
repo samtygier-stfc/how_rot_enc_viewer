@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
         widget = pg.GraphicsLayoutWidget()
         view = pg.ViewBox()
         view.setBackgroundColor((255, 255, 255))
-        img_item = pg.ImageItem(data, autolevel=False)
+        img_item = pg.ImageItem(data, autolevel=False, axisOrder='row-major')
         view.addItem(img_item)
         widget.addItem(view)
         return widget, img_item
@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
         ), self.reconstruction_data.max()
 
         self.sinogram = np.full(
-            (self.projections_data.shape[1], self.projections_data.shape[0]),
+            (self.projections_data.shape[0], self.projections_data.shape[2]),
             self.level_min_max[0])
         self.angles_done = np.zeros((self.projections_data.shape[0]),
                                     dtype=bool)
@@ -111,8 +111,9 @@ class MainWindow(QMainWindow):
         self.angle += step
         self.angle = self.angle % self.max_angle
         self.projections_img.setImage(self.projections_data[self.angle])
-        self.sinogram[:, self.angle] = self.projections_data[self.angle, :,
-                                                             1000]
+        slice_number = self.projections_data.shape[1] // 2
+        self.sinogram[self.angle, :] = self.projections_data[self.angle,
+                                                             slice_number, :]
         self.sinogram_img.setImage(self.sinogram)
         self.angles_done[self.angle] = True
 

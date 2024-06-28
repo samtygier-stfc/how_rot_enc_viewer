@@ -18,14 +18,15 @@ def imread(filename: Path) -> np.ndarray:
         except tifffile.TiffFileError as e:
             raise RuntimeError(f"TiffFileError {e.args[0]}: {filename}") from e
     elif filename.suffix == '.png':
-        data = skimage.io.imread(filename, as_gray=True)
+        data = skimage.io.imread(filename)
 
-    if data.shape[1] > MAX_SIZE:
+    if data.shape[0] > MAX_SIZE:
         data = resize(data, (MAX_SIZE, MAX_SIZE))
 
     if data.dtype == np.float32:
         data = data.astype(np.float16)
-    return data
+
+    return np.flip(data, axis=0)
 
 
 def load_stack(directory: Path, name_pattern: str, start: int,
@@ -34,11 +35,11 @@ def load_stack(directory: Path, name_pattern: str, start: int,
     image_0 = imread(directory / name_pattern.format(indexes[0]))
 
     count = len(indexes)
-    width, height = image_0.shape
-    image_stack = np.zeros((count, height, width), dtype=image_0.dtype)
+    full_shape = [count, *image_0.shape]
+    image_stack = np.zeros(full_shape, dtype=image_0.dtype)
 
     for n, i in enumerate(indexes):
-        image_stack[n] = imread(directory / name_pattern.format(i)).T[:, ::-1]
+        image_stack[n] = imread(directory / name_pattern.format(i))
 
     return image_stack
 
