@@ -71,7 +71,12 @@ class MainWindow(QMainWindow):
         for i in [0, 1, 2, 0]:
             self.message_box.setText(f"Loading {i}")
             QApplication.processEvents()
-            self.select_dataset(i)
+            try:
+                self.select_dataset(i)
+            except Exception as e:
+                self.message_box.setText(f"Failed to load {i}\n{e}")
+                raise
+
         self.message_box.hide()
 
     def select_dataset(self, index: int) -> None:
