@@ -3,8 +3,9 @@ from pathlib import Path
 import numpy as np
 from tifffile import tifffile
 import skimage.io
+from skimage.transform import resize
 
-from config import CACHED_DIR
+from config import CACHED_DIR, MAX_SIZE
 
 if not CACHED_DIR.exists():
     CACHED_DIR.mkdir()
@@ -18,6 +19,9 @@ def imread(filename: Path) -> np.ndarray:
             raise RuntimeError(f"TiffFileError {e.args[0]}: {filename}") from e
     elif filename.suffix == '.png':
         data = skimage.io.imread(filename, as_gray=True)
+
+    if data.shape[1] > MAX_SIZE:
+        data = resize(data, (MAX_SIZE, MAX_SIZE))
 
     if data.dtype == np.float32:
         data = data.astype(np.float16)
