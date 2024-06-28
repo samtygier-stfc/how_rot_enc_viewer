@@ -50,8 +50,8 @@ def load_stack_c(directory: Path, name_pattern: str, start: int,
                                ".npy")
     if not cache_file.exists():
         data = load_stack(directory, name_pattern, start, stop)
-        #data = data.astype(np.float16)
-        data = convert_to_uint8(data)
+        if data.dtype != np.uint8:
+            data = convert_to_uint8(data)
         np.save(cache_file, data)
         print(f"Wrote {cache_file}")
     else:
@@ -61,8 +61,9 @@ def load_stack_c(directory: Path, name_pattern: str, start: int,
 
 
 def convert_to_uint8(array: np.ndarray) -> np.ndarray:
-    min, max = array.min(), array.max()
+    min, max = array.min(), (array.max() - 1)
     print(f"Min: {min}, Max: {max}")
     data = (array - min) / (max - min) * 255
+    data = data.clip(0, 255)
     print(f"after Min: {data.min()}, Max: {data.max()}")
     return data.astype(np.uint8)
