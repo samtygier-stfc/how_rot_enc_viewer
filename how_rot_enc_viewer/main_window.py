@@ -143,6 +143,18 @@ class MainWindow(QMainWindow):
                 self.rotate(1)
             if e.key() == Qt.Key.Key_5:
                 self.rotate(-1)
+        else:
+            if e.key() == Qt.Key.Key_1:
+                self.select_dataset(0)
+            if e.key() == Qt.Key.Key_2:
+                self.select_dataset(1)
+            if e.key() == Qt.Key.Key_3:
+                self.select_dataset(2)
+
+            if e.key() == Qt.Key.Key_Left:
+                self.rotate(1)
+            if e.key() == Qt.Key.Key_Right:
+                self.rotate(-1)
 
         self.inactive_timer.start(INACTIVE_TIMEOUT)
 
