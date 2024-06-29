@@ -162,4 +162,4 @@ class MainWindow(QMainWindow):
         self.recon_animate_timer.stop()
         self.projections_img.setImage(np.zeros((1, 1)))
         self.sinogram_img.setImage(np.zeros((1, 1)))
-        self.reconstruction_img.setImage(np.ones((1, 1)))
+        self.reconstruction_img.setImage(np.ones((1, 1)) * 255)
