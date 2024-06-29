@@ -148,10 +148,6 @@ class MainWindow(QMainWindow):
 
     def handle_inactive(self) -> None:
         self.recon_animate_timer.stop()
-        blank = np.zeros((
-            1,
-            1,
-        ))
-        self.projections_img.setImage(blank)
-        self.sinogram_img.setImage(blank)
-        self.reconstruction_img.setImage(blank)
+        self.projections_img.setImage(np.zeros((1, 1)))
+        self.sinogram_img.setImage(np.zeros((1, 1)))
+        self.reconstruction_img.setImage(np.ones((1, 1)))
